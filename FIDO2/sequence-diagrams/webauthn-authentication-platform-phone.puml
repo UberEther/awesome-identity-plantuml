@@ -1,0 +1,28 @@
+@startuml
+
+!include ../../defaults.iuml
+
+FA_USER(Consumer,Consumer,participant)
+FA5_LOCK(Authenticator,Authenticator,participant)
+FA_MOBILE_PHONE(Client,Client,participant)
+FA5_SERVER(Server,Server,participant)
+
+title Platform or Roaming Authenticator
+
+autonumber
+Consumer -> Client: User Navigates to $fido_url
+Client -> Server: Client requests login page
+Server -> Client: Returns login page
+Client -> Consumer: Returns login page
+Consumer -> Client: Clicks login button
+Client -> Server: Get challenge
+Server -> Client: Challenge
+Client -> Authenticator: Challenge + get credentials command +\nrequested credentials id (optional)
+Authenticator -> Consumer: Authorization request (optional)
+Consumer -> Authenticator: Authorized
+Authenticator -> Client: Signed challenge
+Client -> Server: Signed challenge
+Server -> Client: Logged in
+Client -> Consumer: Logged in
+
+@enduml

@@ -1,0 +1,36 @@
+name: Generate Diagrams
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'fulcio/**'
+      - '.github/workflows/diagrams.yml'
+
+jobs:
+  generate_plantuml:
+    runs-on: ubuntu-latest
+    name: Generate PlantUml Diagrams
+    steps:
+      - name: Install Dependencies
+        run: |
+          sudo apt-get install graphviz
+          sudo mkdir -p /opt/plantuml
+          cd /opt/plantuml
+          UML=https://github.com/plantuml/plantuml/releases/download/v1.2022.6/plantuml-1.2022.6.jar
+          sudo curl -JLO ${UML}
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Process Diagrams
+        run: java -jar /opt/plantuml/plantuml-1.2022.6.jar -v -tsvg -r -o "." "fulcio/sequence-diagrams/**.puml"
+      - name: Display Diagrams
+        run: pwd &&  ls diagrams/** | grep \.svg$
+      - name: Commit Diagrams
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m ":rocket: Adding Generated PlantUML Diagrams" || exit 0
+      - name: Push Diagrams
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}

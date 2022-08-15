@@ -1,0 +1,64 @@
+@startuml
+
+!include ../../defaults.iuml
+
+FA_USER(Developer,Developer,participant)
+ID2_ICON_BIOMETRICS(Authenticator,Authenticator,participant)
+ID2_ICON_BROWSER(Client,Client,participant)
+ID2_ICON_LOGIN(IDP,Identity Provider,participant)
+ID2_ICON_WEBAUTHN(FIDO, FIDO Server, participant)
+FA5_CERTIFICATE(Fulcio,Fulcio\n(Relying Party),participant)
+ID2_ICON_LOGS(Rekor,Rekor\n(Transparency Log),participant)
+
+title Fulcio Authentication with FIDO (Passkey) to Signing Certificate Generation
+
+autonumber
+group Request Certificate
+    Developer -> Fulcio : Request Certificate
+    Fulcio -> Fulcio : Checks if developer is authenticated
+    Fulcio -> Client : Login Page
+    Fulcio -> IDP : Discovery request
+    IDP -> Fulcio : Discovery response
+    Fulcio -> IDP : Association request
+    IDP -> Fulcio : Association response
+    Fulcio -> Client : Redirect authentication request\n(acr value(s), amr value(s), and authtime optional)
+    Client -> IDP : Fulcio -> Client: Redirect authentication request\n(acr value(s), amr value(s), and authtime optional)
+    IDP -> IDP : Checks if developer is authenticated
+    IDP -> Client : Login page
+    Client -> Developer : Returns login page
+    Developer -> Client : Enters email and clicks login button
+    Client  -> FIDO : Email sent (policies and identifiers optional)
+    Client -> FIDO : Get challenge
+    FIDO -> Client : Challenge
+    Client -> Client : Create request parameters
+    Client -> Developer : Challenge + get credentials command +\nrequested credentials id (optional)
+    Client -> Developer : Prompt appears\n"Please complete biometric authentication\n(finger, look, speak, etc.)"
+    Client -> Authenticator : Authorization request sent
+    Authenticator -> Authenticator : Verify parameters
+    Authenticator -> Authenticator : Match credential
+    Authenticator -> Developer : Prompt for biometric gesture
+    Developer -> Authenticator : Approves prompt with finger/look/speak/etc.
+    Developer -> Authenticator : Asserts authorization gesture
+    Authenticator -> Client : Signed challenge
+    Client -> FIDO : Signed challenge
+    FIDO -> FIDO : Look up public key
+    FIDO -> FIDO : Verify assertion
+    FIDO -> Client : Logged in with JWT
+    Client -> IDP : Asserts FIDO JWT with acr, amr, and authtime with IDP audience
+    IDP -> IDP : Generates IDP signed JWT with acr, amr, and authtime with Fulcio audience
+    IDP -> Client : Redirect authentication response with JWT
+    Client -> Fulcio : Redirect authentication resposne with JWT
+    Fulcio -> Fulcio : Validates JWT token
+    Fulcio -> Fulcio : Issues signing certificate with\nurl (jwt issuer), contact (jwt subject), type: oidc, acr:, amr:, authtime:
+    Fulcio -> Rekor : Publishes hash, public key, signing certificate to transparency log
+    Fulcio -> Developer : Provides signing certificate
+    Developer -> Developer : Publish Signed Artifact
+
+end
+
+legend
+    OIDC ACR Values to Bridge FIDO authenticators: https://openid.net/specs/openid-connect-eap-acr-values-1_0.html
+    AMR Values can be found at: https://www.rfc-editor.org/rfc/rfc8176#section-2
+end legend
+
+@enduml

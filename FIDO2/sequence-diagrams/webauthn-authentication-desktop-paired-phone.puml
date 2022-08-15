@@ -1,0 +1,49 @@
+@startuml
+
+!include ../../defaults.iuml
+
+FA_USER(Consumer,Consumer,participant)
+FA_MOBILE_PHONE(Authenticator,Authenticator,participant)
+FA_LAPTOP(Client,Client,participant)
+FA5_SERVER(Server,Server,participant)
+
+title Paired Phone and Desktop Authentication
+
+autonumber
+group Pairing Authenticator to Laptop / Desktop
+    Consumer -> Client: Begins Bluetooth Pairing
+    Consumer -> Authenticator: Begins Bluetooth Advertising
+    Consumer -> Client: Selects Authenticator from List
+    Client -> Authenticator: SMP pairing request
+    Authenticator -> Client: SMP pairing response
+    Client -> Authenticator: SMP pairing public key
+    Authenticator -> Client: SMP pairing public key
+    Consumer -> Authenticator: Confirms pairing request (optional)
+    Client -> Authenticator: SMP pairing DHKey check
+    Authenticator -> Client: SMP pairing DHKey check
+    Client -> Client: Keys stored in keyset
+end 
+
+autonumber
+group Authentication Event
+    Consumer -> Client: User Navigates to $fido_url
+    Client -> Server: Client requests login page
+    Server -> Client: Returns login page
+    Client -> Consumer: Returns login page
+    Consumer -> Client: Clicks login button
+    Client  -> Server: Credential sent
+    Client -> Server: Get challenge
+    Server -> Client: Challenge
+    Client -> Consumer: Challenge + get credentials command +\nrequested credentials id (optional)
+    Client -> Consumer: Prompt appears\n"Please complete this action on your phone."
+    Client -> Authenticator: Authorization request sent
+    Authenticator -> Consumer: Prompt or notification, "Sign in to $fido_url"
+    Consumer -> Authenticator: Approves prompt for sign in
+    Consumer -> Authenticator: Asserts authorization gesture
+    Authenticator -> Client: Signed challenge
+    Client -> Server: Signed challenge
+    Server -> Client: Logged in
+    Client -> Consumer: Logged in
+end
+
+@enduml

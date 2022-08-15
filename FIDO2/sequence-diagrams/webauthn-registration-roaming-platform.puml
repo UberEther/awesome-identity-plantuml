@@ -1,0 +1,39 @@
+@startuml
+
+!include ../../defaults.iuml
+
+FA_USER(Consumer,Consumer,participant)
+GOV_KEY(Authenticator,Authenticator,participant)
+FA_LAPTOP(Client,Client,participant)
+FA5_SERVER(Server,Server,participant)
+
+title Platform Authenticator Registration from Existing Roaming
+
+autonumber
+group Roaming Authentication
+    Consumer -> Client: User Navigates to $fido_url
+    Client -> Server: Client requests login page
+    Server -> Client: Returns login page
+    Client -> Consumer: Prompts user to enter existing\nroaming authenticator\n(X.509/PIV/CAC certificate, password, or physical FIDO2 device)
+    Consumer -> Client: Credential selected
+    Server -> Client: Logged in
+    Client -> Consumer: Logged in
+    Server -> Client: Returns initial page and WebAuthN javascript call
+end
+
+autonumber
+group Register New Platform Authenticator
+    Client -> Consumer: The phone prompts,\n"Do you want to register a new authenticator with $fido_url?"
+    Consumer -> Client: Clicks register button
+    Client -> Server: Get challenge
+    Server -> Client: Challenge
+    Client -> Authenticator: Challenge + create new credentials command
+    Authenticator -> Consumer: Prompts user to enter a platform authenticator
+    Consumer -> Authenticator: Asserts authorization gesture
+    Authenticator -> Client: New credentials + signed challenge
+    Client -> Server: Credentials (public key) + signed challenge
+    Server -> Client: Registered
+    Client -> Consumer: Registered
+end
+
+@enduml

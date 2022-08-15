@@ -1,0 +1,67 @@
+@startuml
+
+!include ../../defaults.iuml
+
+FA_USER(Consumer,Consumer,participant)
+GOV_ID_CARD_O(Certificate,Certificate,participant)
+GOV_KEY(Authenticator,Authenticator,participant)
+FA_LAPTOP(Client,Client,participant)
+FA5_SERVER(Server,Server,participant)
+
+title Platform Authenticator Registration on Phone
+
+autonumber
+group Roaming Authentication
+    Consumer -> Client: User Navigates to $fido_url
+    Client -> Server: Client requests login page
+    Server -> Client: Returns login page
+    Client -> Consumer: Prompts user to enter existing\nroaming authenticator\n(X.509/PIV/CAC certificate or physical FIDO2 device)
+    Consumer -> Client: Credential selected
+
+    group If Certificate
+        autonumber 6.1
+        Certificate -> Consumer: Requests PIN
+        Consumer -> Certificate: Enters PIN
+        Certificate -> Certificate: Validates PIN
+        Certificate -> Client: Returns unlocked certificate
+        Client  -> Server: Client certificate public key, key info sent
+        Server -> Server: Verify certificate, calculate symetric key
+    end
+
+    group If Roaming FIDO Credential
+        autonumber 6.1
+        Client -> Server: Get challenge
+        Server -> Client: Challenge
+        Client -> Authenticator: Challenge + get credentials command +\nrequested credentials id (optional)
+        Authenticator -> Consumer: Authorization request (optional)
+        Consumer -> Authenticator: Authorized
+        Certificate -> Consumer: Requests PIN
+        Consumer -> Certificate: Enters PIN
+        Certificate -> Certificate: Validates PIN
+        Consumer -> Authenticator: Authorized
+        Authenticator -> Client: Signed challenge
+        Client -> Server: Signed challenge
+    end
+
+    autonumber 7
+    Server -> Client: Logged in
+    Client -> Consumer: Logged in
+    Server -> Client: Returns initial page and WebAuthN javascript call
+end
+
+autonumber
+group Register New Platform Authenticator
+    Client -> Consumer: The phone prompts,\n"Do you want to register a platform authenticator with $fido_url?"
+    Consumer -> Client: Clicks register button
+    Client -> Server: Get challenge
+    Server -> Client: Challenge
+    Client -> Authenticator: Challenge + create new credentials command
+    Authenticator -> Consumer: Prompts user to enter a platform authenticator
+    Consumer -> Authenticator: Asserts authorization gesture
+    Authenticator -> Client: New credentials + signed challenge
+    Client -> Server: Credentials (public key) + signed challenge
+    Server -> Client: Registered
+    Client -> Consumer: Registered
+end
+
+@enduml

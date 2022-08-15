@@ -1,0 +1,40 @@
+@startuml
+
+!include ../../defaults.iuml
+
+GOV_KEY(Authenticator,Authenticator,participant)
+FA_LAPTOP(Client,Client,participant)
+FA5_HTML5(Application,Application,participant)
+FA5_SERVER(Server,Server,participant)
+FA5_DATABASE(Directory,Directory,participant)
+
+title Username and Password Authentication with Risk Context
+
+autonumber
+group Authentication Event
+    Client -> Application: User Navigates to salesforce.com
+    Application -> Application: No user session
+    Application -> Client: Redirects to $fido_url
+    Client -> Server: Client requests login page
+    Server -> Client: Returns login page
+    Client -> Client: Enters email address or username
+    Client -> Client: Clicks next button
+    Client  -> Server: Credential sent with context data
+    Server -> Server: Looks up if strong authenticator registered
+    Server -> Server: Executes risk profiling
+    Server -> Client: Returns redirect to password page
+    Client -> Server: Requests password page
+    Server -> Client: Returns page to enter password
+    Client -> Server: Enters memorized credentials
+    Server -> Directory: Validates credentials
+    Directory -> Server: Bind credential succes
+    Server -> Server: Evaluates against password and security policies
+    Server -> Server: Generates session token
+    Server -> Client: Redirects to salesforce.com with SAML assertion
+    Client -> Application: Sends signed SAML assertion
+    Application -> Application: Validates SAML assertion
+    Application -> Application: Generates local session token
+    Application -> Client: Logged in and returns welcome page
+end
+
+@enduml

@@ -1,0 +1,39 @@
+@startuml
+
+!include ../../defaults.iuml
+
+FA_USER(Consumer,Consumer,participant)
+GOV_FINGERPRINT(Authenticator,Authenticator,participant)
+FA_LAPTOP(Client,Client,participant)
+FA5_SERVER(Server,Server,participant)
+
+title Biometric Authentication
+
+autonumber
+group Authentication Eventß
+    Consumer -> Client: User Navigates to $fido_url
+    Client -> Server: Client requests login page
+    Server -> Client: Returns login page
+    Client -> Consumer: Returns login page
+    Consumer -> Client: Clicks login button
+    Client  -> Server: Credential sent
+    Client -> Server: Get challenge
+    Server -> Client: Challenge
+    Client -> Client: Create request parameters
+    Client -> Consumer: Challenge + get credentials command +\nrequested credentials id (optional)
+    Client -> Consumer: Prompt appears\n"Please complete biometric authentication\n(finger, look, speak, etc.)"
+    Client -> Authenticator: Authorization request sent
+    Authenticator -> Authenticator: Verify parameters
+    Authenticator -> Authenticator: Match credential
+    Authenticator -> Consumer: Prompt for biometric gesture
+    Consumer -> Authenticator: Approves prompt with finger/look/speak/etc.
+    Consumer -> Authenticator: Asserts authorization gesture
+    Authenticator -> Client: Signed challenge
+    Client -> Server: Signed challenge
+    Server -> Server: Look up public key
+    Server -> Server: Verify assertion
+    Server -> Client: Logged in
+    Client -> Consumer: Logged in
+end
+
+@enduml

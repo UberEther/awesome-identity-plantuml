@@ -1,0 +1,34 @@
+@startuml
+
+!include ../../defaults.iuml
+
+GOV_KEY(Authenticator,Authenticator,participant)
+FA_USER(User,User,participant)
+FA_MOBILE_PHONE(Client,Client,participant)
+FA5_BOOK_OPEN(Desktop,Mobile Application, participant)
+FA5_HTML5(Application,Mobile Browser,participant)
+FA5_SERVER(Server,Server,participant)
+
+title FIDO Based Authentication
+
+autonumber
+group Authentication Event
+    User -> Desktop: User opens application and selects login
+    Desktop -> Client: Directs client browser to request application login page
+    Client -> Application: Submits request for page
+    Application -> Application: No user session
+    Application -> Client: Redirects to $fido_url
+    Client -> Server: Client requests login page
+    Server -> Server: Generates session token
+    Server -> Server: Evaluates against security policies
+    Server -> Client: Redirects to application with SAML assertion
+    Client -> Application: Sends signed SAML assertion
+    Application -> Application: Validates SAML assertion
+    Application -> Application: Generates App OAuth Token
+    Application -> Client: OAuth Token Returned
+    Client -> Desktop: OAuth Token Handed Off
+    Desktop -> Desktop: Validates OAuth Token
+    Desktop -> User: Application Accessed
+end
+
+@enduml

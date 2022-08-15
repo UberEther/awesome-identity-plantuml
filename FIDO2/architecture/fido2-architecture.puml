@@ -1,0 +1,34 @@
+@startuml
+
+!include ../../defaults.iuml
+
+title FIDO2 Architecture
+
+actor Consumer
+
+node "Client" {
+  [Client-side JS]
+  [WebAuthN API]
+}
+
+node "Server" {
+  node "Transient State"
+  node "Application Logic"
+  node "Library"
+  database "User DB"
+}
+
+node Authenticator  {
+  [Platform]
+  [Roaming]
+}
+
+[Consumer] <-> [Client-side JS]
+[WebAuthN API] <-d-> [Roaming]
+[Client-side JS] <-d-> [WebAuthN API]
+[Client-side JS] <-> [Application Logic]
+[Application Logic] <-> [Transient State]
+[Application Logic] <-u-> [Library]
+[Application Logic] <-d-> [User DB]
+
+@enduml

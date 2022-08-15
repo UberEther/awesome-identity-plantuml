@@ -1,0 +1,47 @@
+@startuml
+
+!include ../../defaults.iuml
+
+skinparam Shadowing true
+skinparam defaultTextAlignment center
+
+FA_USER(Consumer,Consumer,participant)
+GOV_ID_CARD_O(Certificate,Certificate,participant)
+GOV_KEY(Authenticator,Authenticator,participant)
+FA_LAPTOP(Client,Client,participant)
+FA5_SERVER(Server,Server,participant)
+
+title Roaming Authenticator Registration from X.509
+
+autonumber
+group x.509 Authentication
+    Consumer -> Client: User Navigates to $fido_url
+    Client -> Server: Client requests login page
+    Server -> Client: Returns login page
+    Client -> Consumer: Prompts user to enter exsting\nX.509/PIV/CAC certificate\n(Client certificate request)
+    Consumer -> Certificate: Credential selected
+    Certificate -> Consumer: Requests PIN
+    Consumer -> Certificate: Enters PIN
+    Certificate -> Certificate: Validates PIN
+    Certificate -> Client: Returns unlocked certificate
+    Client  -> Server: Client certificate public key, key info sent
+    Server -> Server: Verify certificate, calculate symetric key
+    Server -> Client: Returns initial page and WebAuthN javascript call
+end
+
+autonumber
+group Register New Roaming Authenticator
+    Client -> Consumer: The phone prompts,\n"Do you want to register a roaming authenticator with $fido_url?"
+    Consumer -> Client: Clicks register button
+    Client -> Server: Get challenge
+    Server -> Client: Challenge
+    Client -> Authenticator: Challenge + create new credentials command
+    Authenticator -> Consumer: Prompts user to enter a roaming authenticator
+    Consumer -> Authenticator: Asserts authorization gesture
+    Authenticator -> Client: New credentials + signed challenge
+    Client -> Server: Credentials (public key) + signed challenge
+    Server -> Client: Registered
+    Client -> Consumer: Registered
+end
+
+@enduml

@@ -1,0 +1,56 @@
+!include <tupadr3/common>
+
+!include <tupadr3/devicons/code>
+!include <tupadr3/devicons/html5>
+!include <tupadr3/devicons/terminal_badge>
+
+!include <tupadr3/govicons/fingerprint>
+!include <tupadr3/govicons/id_card_o>
+!include <tupadr3/govicons/key>
+
+!include <tupadr3/font-awesome/laptop>
+!include <tupadr3/font-awesome/mobile_phone>
+!include <tupadr3/font-awesome/user>
+!include <tupadr3/font-awesome/user_secret>
+
+!include <tupadr3/font-awesome-5/book_open>
+!include <tupadr3/font-awesome-5/certificate>
+!include <tupadr3/font-awesome-5/chrome>
+!include <tupadr3/font-awesome-5/database>
+!include <tupadr3/font-awesome-5/html5>
+!include <tupadr3/font-awesome-5/lock>
+!include <tupadr3/font-awesome-5/newspaper>
+!include <tupadr3/font-awesome-5/server>
+
+!define  IDICONURL https://raw.githubusercontent.com/UberEther/plantuml-identity-sprites/main
+!include IDICONURL/identicons-set-v2/icon_access_token.puml
+!include IDICONURL/identicons-set-v2/icon_api.puml
+!include IDICONURL/identicons-set-v2/icon_applications.puml
+!include IDICONURL/identicons-set-v2/icon_authentication_a.puml
+!include IDICONURL/identicons-set-v2/icon_authentication_b.puml
+!include IDICONURL/identicons-set-v2/icon_authorization_server.puml
+!include IDICONURL/identicons-set-v2/icon_biometrics.puml
+!include IDICONURL/identicons-set-v2/icon_browser.puml
+!include IDICONURL/identicons-set-v2/icon_certificate.puml
+!include IDICONURL/identicons-set-v2/icon_cli_script.puml
+!include IDICONURL/identicons-set-v2/icon_credential_application.puml
+!include IDICONURL/identicons-set-v2/icon_credential_user.puml
+!include IDICONURL/identicons-set-v2/icon_desktop_app.puml
+!include IDICONURL/identicons-set-v2/icon_device_biometrics.puml
+!include IDICONURL/identicons-set-v2/icon_id_token.puml
+!include IDICONURL/identicons-set-v2/icon_login.puml
+!include IDICONURL/identicons-set-v2/icon_logs.puml
+!include IDICONURL/identicons-set-v2/icon_multifactor.puml
+!include IDICONURL/identicons-set-v2/icon_refresh_token.puml
+!include IDICONURL/identicons-set-v2/icon_security.puml
+!include IDICONURL/identicons-set-v2/icon_server.puml
+!include IDICONURL/identicons-set-v2/icon_webauthn.puml
+
+skinparam Shadowing true
+skinparam defaultTextAlignment center
+
+!$idp_url  = login.myidp.com
+!$application_url  = app.myidp.com
+!$fido_url = fido.myidp.com
+
+center footer %filename() rendered by PlantUML from awesome-identity-plantuml (https://github.com/uberether/awesome-identity-plantuml)

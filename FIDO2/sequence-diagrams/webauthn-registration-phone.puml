@@ -1,0 +1,30 @@
+@startuml
+
+!include ../../defaults.iuml
+
+FA_USER(Consumer,Consumer,participant)
+FA5_LOCK(Authenticator,Authenticator,participant)
+FA_MOBILE_PHONE(Client,Client,participant)
+FA5_SERVER(Server,Server,participant)
+
+title Platform Authenticator Registration on Phone
+
+autonumber
+Consumer -> Client: User Navigates to $fido_url
+Client -> Server: Client requests login page
+Server -> Client: Returns login page
+Client -> Consumer: Prompts user to enter exsting credential\n(username/password, X.509/PIV/CAC certificate)
+Server -> Client: Returns initial page and WebAuthN javascript call
+Client -> Consumer: The phone prompts,\n"Do you want to register a platform authenticator with $fido_url?"
+Consumer -> Client: Clicks register button
+Client -> Server: Get challenge
+Server -> Client: Challenge
+Client -> Authenticator: Challenge + create new credentials command
+Authenticator -> Consumer: Prompts user to enter a platform authenticator
+Consumer -> Authenticator: Asserts authorization gesture
+Authenticator -> Client: New credentials + signed challenge
+Client -> Server: Credentials (public key) + signed challenge
+Server -> Client: Registered
+Client -> Consumer: Registered
+
+@enduml

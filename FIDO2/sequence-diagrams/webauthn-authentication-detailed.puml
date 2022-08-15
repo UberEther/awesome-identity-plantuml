@@ -1,0 +1,37 @@
+@startuml
+
+!include ../../defaults.iuml
+
+skinparam Shadowing false
+
+title Detailed WebAuthN / CTAP2 FIDO2 Authentication
+
+Consumer -> Client: Authentication Request
+Client -> Server: start(username?)
+Server -> Server: Create userHandle?
+Server -> Server: Verify password?
+Server -> Library: start(username?, userHandle?)
+Library -> Library: Generate challenge
+Library -> UserDatabase: listCredentials(username)
+UserDatabase -> Library: Credential IDs
+Library -> Server: request: PublicKeyCredential*Options
+Server -> Client: navigator.credentials.*(request)
+Client -> Consumer: Request Credential
+Consumer -> Client: Present Credential
+Client -> Server: response: PublicKeyCredential
+Server -> Library: finish(request, response)
+Library -> Library: Validate(request, response)
+Library -> UserDatabase: getPublicKey(response.id)
+UserDatabase -> Library: Public key
+Library -> Library: Verify response signature
+Library -> Server: result: Result
+Server -> Server: Inspect result
+Server -> Client: Report failure?
+Client -> Consumer: Acknowledge Failure
+Consumer -> Client: Agree to Store
+Server -> UserDatabase: Store new credential?
+Server -> UserDatabase: Update signature count?
+Server -> Client: Report success?
+Client -> Consumer: Respond Success
+
+@enduml
