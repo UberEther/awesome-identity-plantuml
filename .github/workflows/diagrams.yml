@@ -21,14 +21,8 @@ jobs:
           sudo curl -JLO ${UML}
       - name: Checkout Repository
         uses: actions/checkout@v2
-      - name: Get changed files
-        id: puml-files
-        uses: tj-actions/glob@v10
-        with:
-          files: |
-            **/*.puml
       - name: Process Diagrams
-        run: java -jar /opt/plantuml/plantuml-1.2022.6.jar -v -tsvg -r -o "." "${{ steps.puml-files.outputs.paths }}"
+        run: java -jar /opt/plantuml/plantuml-1.2022.6.jar -v -tsvg -r -o "." "*/**.puml"
       - name: Display Diagrams
         run: pwd &&  ls -R ** | grep \.svg$
       - name: Commit Diagrams
