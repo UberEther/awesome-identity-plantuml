@@ -1,6 +1,6 @@
 @startuml
 
-!include ../../defaults.iuml
+!include ../../../defaults.iuml
 
 FA_USER(Developer,Developer,participant)
 GOV_FINGERPRINT(Authenticator,Authenticator,participant)

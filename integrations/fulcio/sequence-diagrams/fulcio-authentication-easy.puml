@@ -1,6 +1,6 @@
 @startuml
 
-!include ../../defaults.iuml
+!include ../../../defaults.iuml
 
 FA_USER(Developer,Developer,participant)
 ID2_ICON_BIOMETRICS(Authenticator,Authenticator,participant)

@@ -1,16 +1,10 @@
 @startuml
 
-!include ../../defaults.iuml
+!include ../../../defaults.iuml
 
 title OPA Architecture
 
 actor Consumer
-
-node "Network Enclave" {
-    [Email Server]
-    [Object Store]
-    [Virtru ACM Server]
-}
 
 node "OPA Architecture Components" {
   node "Discovery Service" as ds
@@ -28,7 +22,7 @@ node "Policy Owner" {
   node "Data (JSON)"
 } '/
 
-[Consumer] -l-> [Open Policy Agent] : Query Policy
+[Consumer] -r-> [Open Policy Agent] : Query Policy
 [Open Policy Agent] -u-> [ds] : Download Configuration\n(Discovery API)
 [Open Policy Agent] -u-> [Bundle Service] : Download Policies & Data Bundles\n(Bundle API)
 [Open Policy Agent] <-u- [Platform Monitoring] : Collect Performance Metrics\n(Health API)

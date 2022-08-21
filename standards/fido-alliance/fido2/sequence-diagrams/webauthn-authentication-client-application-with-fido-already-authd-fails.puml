@@ -1,6 +1,6 @@
 @startuml
 
-!include ../../defaults.iuml
+!include ../../../../defaults.iuml
 
 GOV_KEY(Authenticator,Authenticator,participant)
 FA_USER(User,User,participant)

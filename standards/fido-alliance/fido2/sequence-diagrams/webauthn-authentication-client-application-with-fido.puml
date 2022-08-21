@@ -1,6 +1,6 @@
 @startuml
 
-!include ../../defaults.iuml
+!include ../../../../defaults.iuml
 
 GOV_KEY(Authenticator,Authenticator,participant)
 FA_USER(User,User,participant)
@@ -16,7 +16,7 @@ group Authentication Event
     Client -> Application: Submits request for page
     Application -> Application: No user session
     Application -> Client: Redirects to $fido_url
-    Client -> Server: Client requests login page    
+    Client -> Server: Client requests login page
     Server -> Server: Validates session token
     Server -> Server: Evaluates against security policies
     Server -> Client: Redirects to application with SAML assertion

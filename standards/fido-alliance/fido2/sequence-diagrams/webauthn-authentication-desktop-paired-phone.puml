@@ -1,6 +1,6 @@
 @startuml
 
-!include ../../defaults.iuml
+!include ../../../../defaults.iuml
 
 FA_USER(Consumer,Consumer,participant)
 FA_MOBILE_PHONE(Authenticator,Authenticator,participant)
@@ -22,7 +22,7 @@ group Pairing Authenticator to Laptop / Desktop
     Client -> Authenticator: SMP pairing DHKey check
     Authenticator -> Client: SMP pairing DHKey check
     Client -> Client: Keys stored in keyset
-end 
+end
 
 autonumber
 group Authentication Event

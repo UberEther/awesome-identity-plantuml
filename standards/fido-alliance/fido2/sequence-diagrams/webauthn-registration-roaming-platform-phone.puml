@@ -1,6 +1,6 @@
 @startuml
 
-!include ../../defaults.iuml
+!include ../../../../defaults.iuml
 
 FA_USER(Consumer,Consumer,participant)
 GOV_ID_CARD_O(Certificate,Certificate,participant)

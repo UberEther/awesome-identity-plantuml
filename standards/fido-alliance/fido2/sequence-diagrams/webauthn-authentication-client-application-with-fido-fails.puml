@@ -1,6 +1,6 @@
 @startuml
 
-!include ../../defaults.iuml
+!include ../../../../defaults.iuml
 
 FA_LAPTOP(Client,Client,participant)
 FA_USER(User,User,participant)
@@ -32,7 +32,7 @@ group Authentication Event
     Authenticator -> Client: Signed challenge
     Client -> Server: Signed challenge
     Server -> Server: Validates challenge with public key
-    Server -> Server: Validates user and key pairs    
+    Server -> Server: Validates user and key pairs
     Server -> Server: Evaluates against security policies
     Server -> Server: Policy Evaluation Fails
     Server -> Client: Redirects to username / password page
