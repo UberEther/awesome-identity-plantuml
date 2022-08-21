@@ -21,7 +21,7 @@ jobs:
           sudo curl -JLO ${UML}
 
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Get changed files
         id: puml-files
@@ -43,7 +43,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add -A
+          git add .
           git commit -m ":rocket: Adding Generated PlantUML Diagrams" || exit 0
 
       - name: Push Diagrams
