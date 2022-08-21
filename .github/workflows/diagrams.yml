@@ -22,8 +22,6 @@ jobs:
 
       - name: Checkout Repository
         uses: actions/checkout@v3
-        with: 
-          fetch-depth: 0
 
       - name: Get changed files
         id: puml-files
@@ -37,6 +35,11 @@ jobs:
           for file in ${{ steps.puml-files.outputs.paths }}; do
             java -jar /opt/plantuml/plantuml-1.2022.6.jar -v -tsvg -r -o "." "$file"
           done
+
+      - name: Display Diagrams
+        run: |
+          pwd &&  ls integrations/** | grep \.svg$
+          pwd &&  ls standards/** | grep \.svg$
 
       - name: Commit Diagrams
         run: |
