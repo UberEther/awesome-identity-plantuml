@@ -40,3 +40,4 @@ target/
 # project specific
 .tmp
 *.code-workspace
+*.svg
