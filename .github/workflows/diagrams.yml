@@ -37,9 +37,7 @@ jobs:
           done
 
       - name: Display Diagrams
-        run: |
-          pwd &&  ls integrations/** | grep \.svg$
-          pwd &&  ls standards/** | grep \.svg$
+        run: pwd &&  ls ** | grep \.svg$
 
       - name: Commit Diagrams
         run: |
