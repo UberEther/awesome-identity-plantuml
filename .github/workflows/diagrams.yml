@@ -19,33 +19,24 @@ jobs:
           cd /opt/plantuml
           UML=https://github.com/plantuml/plantuml/releases/download/v1.2022.6/plantuml-1.2022.6.jar
           sudo curl -JLO ${UML}
-
       - name: Checkout Repository
         uses: actions/checkout@v2
-
       - name: Get changed files
         id: puml-files
         uses: tj-actions/glob@v10
         with:
           files: |
             **/*.puml
-
       - name: Process Diagrams
-        run: |
-          for file in ${{ steps.puml-files.outputs.paths }}; do
-            java -jar /opt/plantuml/plantuml-1.2022.6.jar -v -tsvg -r -o "." "$file"
-          done
-
+        run: java -jar /opt/plantuml/plantuml-1.2022.6.jar -v -tsvg -r -o "." "${{ steps.puml-files.outputs.paths }}"
       - name: Display Diagrams
         run: pwd &&  ls -R ** | grep \.svg$
-
       - name: Commit Diagrams
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
           git commit -m ":rocket: Adding Generated PlantUML Diagrams" || exit 0
-
       - name: Push Diagrams
         uses: ad-m/github-push-action@master
         with:
