@@ -37,7 +37,6 @@ jobs:
             args: -v -tpng ${{ steps.filter.outputs.puml_files }}
 
       - name: Commit Diagrams
-        uses: actions/checkout@v2
         if: github.event_name == 'push'
         run: |
           git config --global user.email "action@github.com"
