@@ -1,37 +1,48 @@
 name: Generate Diagrams
 on:
   push:
-    branches: [ "main" ]
-    paths:
-      - 'integrations/**.puml'
-      - 'standards/**.puml'
-      - '.github/workflows/diagrams.yml'
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   generate_plantuml:
     runs-on: ubuntu-latest
     name: Generate PlantUml Diagrams
     steps:
-      - name: Install Dependencies
-        run: |
-          sudo apt-get install graphviz
-          sudo mkdir -p /opt/plantuml
-          cd /opt/plantuml
-          UML=https://github.com/plantuml/plantuml/releases/download/v1.2022.6/plantuml-1.2022.6.jar
-          sudo curl -JLO ${UML}
       - name: Checkout Repository
         uses: actions/checkout@v2
-      - name: Process Diagrams
-        run: java -jar /opt/plantuml/plantuml-1.2022.6.jar -v -tsvg -r -o "." "*/**.puml"
-      - name: Display Diagrams
-        run: pwd &&  ls -R ** | grep \.svg$
-      - name: Commit Diagrams
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add .
-          git commit -m ":rocket: Adding Generated PlantUML Diagrams" || exit 0
-      - name: Push Diagrams
-        uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: dorny/paths-filter@v2
+        name:  "Get PUML files"
+        id: filter
+        with:
+          list-files: 'shell'
+          base: 'main'
+          filters: |
+            puml:
+            - '**.puml'
+      - name: Generate SVG Diagrams
+        uses: cloudbees/plantuml-github-action@master
+        if: steps.filter.outputs.puml == 'true'
+        with:
+            args: -v -tsvg ${{ steps.filter.outputs.puml_files }}
+      - name: Generate PNG Diagrams
+        uses: cloudbees/plantuml-github-action@master
+        if: steps.filter.outputs.puml == 'true'
+        with:
+            args: -v -tpng ${{ steps.filter.outputs.puml_files }}
+
+      - name: Commit Diagrams
+        uses: actions/checkout@v2
+        if: github.event_name == 'push'
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+          git pull
+          git add .
+          git commit -m ":rocket: Adding Generated PlantUML Diagrams"
+          git push
