@@ -41,3 +41,4 @@ target/
 .tmp
 *.code-workspace
 *.svg
+*.png
