@@ -3,6 +3,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'integrations/**.puml'
+      - 'standards/**.puml'
+      - '.github/workflows/diagrams.yml'
   pull_request:
     branches:
       - main
@@ -16,22 +20,26 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          
       - name: Get all the puml files
         id: puml-files
         uses: tj-actions/glob@v10
         with:
           files: |
             **/*.puml
+            
       - name: Generate SVG Diagrams
         uses: cloudbees/plantuml-github-action@master
         if: steps.puml-files.outputs.paths == 'true'
         with:
             args: -v -tsvg ${{ steps.puml-files.outputs.paths }}
+      
       - name: Generate PNG Diagrams
         uses: cloudbees/plantuml-github-action@master
         if: steps.puml-files.outputs.paths == 'true'
         with:
             args: -v -tpng ${{ steps.puml-files.outputs.paths }}
+
       - name: Commit Diagrams
         if: github.event_name == 'push'
         run: |
