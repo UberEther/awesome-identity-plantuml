@@ -47,3 +47,4 @@ jobs:
           git add .
           git commit -m ":rocket: Adding Generated PlantUML Diagrams"
           git push
+      # One of these days I'll clean this up
